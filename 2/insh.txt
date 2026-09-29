@@ -1,0 +1,98 @@
+```bash
+#!/bin/bash
+
+set -e
+
+echo "======================================"
+echo " Hyperledger Fabric Lab Installation"
+echo "======================================"
+
+# 1. Update packages
+echo ""
+echo "[1/5] Updating package lists..."
+sudo apt update
+
+# 2. Install basic dependencies
+echo ""
+echo "[2/5] Installing Git, Curl, Docker and tools..."
+sudo apt install -y \
+    git \
+    curl \
+    docker.io \
+    docker-compose-plugin \
+    jq
+
+# 3. Install Node.js and npm
+echo ""
+echo "[3/5] Installing Node.js and npm..."
+sudo apt install -y nodejs npm
+
+# 4. Start Docker
+echo ""
+echo "[4/5] Starting Docker..."
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 5. Install Hyperledger Fabric
+echo ""
+echo "[5/5] Installing Hyperledger Fabric..."
+
+mkdir -p "$HOME/fabric-dev"
+
+cd "$HOME/fabric-dev"
+
+if [ ! -d "fabric-samples" ]; then
+    curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh \
+        | bash -s -- docker binary
+else
+    echo "fabric-samples already exists."
+    echo "Skipping Fabric download."
+fi
+
+# Verify installations
+echo ""
+echo "======================================"
+echo " Checking Installations"
+echo "======================================"
+
+echo ""
+echo "Git:"
+git --version
+
+echo ""
+echo "Node.js:"
+node --version
+
+echo ""
+echo "npm:"
+npm --version
+
+echo ""
+echo "Docker:"
+docker --version
+
+echo ""
+echo "Docker Compose:"
+docker compose version
+
+echo ""
+echo "Fabric directory:"
+ls "$HOME/fabric-dev/fabric-samples"
+
+echo ""
+echo "Fabric binaries:"
+ls "$HOME/fabric-dev/fabric-samples/bin"
+
+echo ""
+echo "======================================"
+echo " Installation Completed Successfully"
+echo "======================================"
+
+echo ""
+echo "Fabric installed at:"
+echo "$HOME/fabric-dev/fabric-samples"
+
+echo ""
+echo "Next step:"
+echo "cd ~/fabric-dev/fabric-samples/test-network"
+```
